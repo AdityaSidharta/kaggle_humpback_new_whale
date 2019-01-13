@@ -118,3 +118,4 @@ venv.bak/
 !/output/model_checkpoint/placeholder
 !/output/result/placeholder
 !/output/result_metadata/placeholder
+!/output/artifacts/placeholder

@@ -1,6 +1,18 @@
 import math
 import torch
+from sklearn.preprocessing import OneHotEncoder
 
+
+def remove_new_whale(df):
+    return df[df.Id != 'new_whale'].copy()
+
+
+def get_label(df):
+    label = df.Id.values.reshape(-1, 1)
+    ohe_model = OneHotEncoder().fit(label)
+    ohe_label = ohe_model.transform(label)
+    image_label = df.Image.values
+    return ohe_model, image_label.tolist(), ohe_label.toarray()
 
 def get_batch_info(dataloader):
     n_obs = len(dataloader.dataset)

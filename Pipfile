@@ -14,6 +14,8 @@ torch = "*"
 torchvision = "*"
 kaggle = "*"
 ipykernel = "*"
+scikit-learn = "*"
+scikit-image = "*"
 
 [requires]
 python_version = "3.6"
