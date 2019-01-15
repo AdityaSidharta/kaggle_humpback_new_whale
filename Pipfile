@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-numpy = "*"
+numpy = '<=1.15.2'
 tqdm = "*"
 pandas = "*"
 seaborn = "*"
@@ -18,4 +18,4 @@ scikit-learn = "*"
 scikit-image = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.6.7"

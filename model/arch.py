@@ -9,20 +9,6 @@ import math
 import torch.nn as nn
 from torch.utils import model_zoo
 
-pretrained_settings = {
-    'se_resnext101_32x4d': {
-        'imagenet': {
-            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/se_resnext101_32x4d-3b2fe3d8.pth',
-            'input_space': 'RGB',
-            'input_size': [3, 224, 224],
-            'input_range': [0, 1],
-            'mean': [0.485, 0.456, 0.406],
-            'std': [0.229, 0.224, 0.225],
-            'num_classes': 1000
-        }
-    },
-}
-
 
 class SEModule(nn.Module):
 
@@ -308,20 +294,26 @@ class SENet(nn.Module):
         return x
 
 
-def initialize_pretrained_model(model, num_classes, settings):
-    model.load_state_dict(model_zoo.load_url(settings['url']))
-    model.input_space = settings['input_space']
-    model.input_size = settings['input_size']
-    model.input_range = settings['input_range']
-    model.mean = settings['mean']
-    model.std = settings['std']
-
-def se_resnext101(num_classes=1000, pretrained='imagenet'):
+def se_resnext101(n_classes=1000, pretrained=True):
     model = SENet(SEResNeXtBottleneck, [3, 4, 23, 3], groups=32, reduction=16,
                   dropout_p=None, inplanes=64, input_3x3=False,
                   downsample_kernel_size=1, downsample_padding=0,
-                  num_classes=num_classes)
-    if pretrained is not None:
-        settings = pretrained_settings['se_resnext101_32x4d'][pretrained]
-        initialize_pretrained_model(model, num_classes, settings)
+                  num_classes=1000)
+    if pretrained:
+        settings = {
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/se_resnext101_32x4d-3b2fe3d8.pth',
+            'input_space': 'RGB',
+            'input_size': [3, 224, 224],
+            'input_range': [0, 1],
+            'mean': [0.485, 0.456, 0.406],
+            'std': [0.229, 0.224, 0.225],
+            'num_classes': 1000
+        }
+        model.load_state_dict(model_zoo.load_url(settings['url']))
+        model.input_space = settings['input_space']
+        model.input_size = settings['input_size']
+        model.input_range = settings['input_range']
+        model.mean = settings['mean']
+        model.std = settings['std']
+    model.last_linear = nn.Linear(model.last_linear.in_features, n_classes)
     return model
