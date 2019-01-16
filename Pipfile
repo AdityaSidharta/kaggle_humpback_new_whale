@@ -16,6 +16,7 @@ kaggle = "*"
 ipykernel = "*"
 scikit-learn = "*"
 scikit-image = "*"
+torchsummary = "*"
 
 [requires]
 python_version = "3.6.7"

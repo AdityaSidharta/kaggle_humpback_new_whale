@@ -6,6 +6,7 @@ from __future__ import print_function, division, absolute_import
 from collections import OrderedDict
 import math
 
+import torch
 import torch.nn as nn
 from torch.utils import model_zoo
 
@@ -294,7 +295,7 @@ class SENet(nn.Module):
         return x
 
 
-def se_resnext101(n_classes=1000, pretrained=True):
+def se_resnext101(n_classes=1000, pretrained=True, device=torch.device('cuda')):
     model = SENet(SEResNeXtBottleneck, [3, 4, 23, 3], groups=32, reduction=16,
                   dropout_p=None, inplanes=64, input_3x3=False,
                   downsample_kernel_size=1, downsample_padding=0,
@@ -315,5 +316,5 @@ def se_resnext101(n_classes=1000, pretrained=True):
         model.input_range = settings['input_range']
         model.mean = settings['mean']
         model.std = settings['std']
-    model.last_linear = nn.Linear(model.last_linear.in_features, n_classes)
+    model.last_linear = nn.Linear(model.last_linear.in_features, n_classes).to(device)
     return model

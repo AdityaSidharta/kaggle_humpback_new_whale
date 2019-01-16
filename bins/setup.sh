@@ -18,3 +18,5 @@ pipenv install --dev
 pipenv run pip install black
 pipenv run pip install pip==18.0
 pipenv run python -m ipykernel install --user --name=kaggle_humpback_new_whale
+pipenv run pip install ipywidgets
+pipenv run jupyter nbextension enable --py widgetsnbextension

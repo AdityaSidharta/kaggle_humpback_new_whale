@@ -21,7 +21,7 @@ def fit_model(
     metric_fn,
     val_dataloader=None,
     checkpoint=False,
-    model_fn="pytorch",
+    model_filename="pytorch",
 ):
     n_dev_obs, dev_batch_size, dev_batch_per_epoch = get_batch_info(dev_dataloader)
     for idx_epoch in tqdm(range(n_epoch), total=n_epoch):
@@ -40,7 +40,7 @@ def fit_model(
             )
             print(" val_loss : {}, val_metric : {}".format(val_loss, val_metric))
         if checkpoint:
-            model_filename = "{}_{}".format(model_fn, idx_epoch)
+            model_filename = "{}_{}".format(model_filename, idx_epoch)
             save_checkpoint(model, optimizer, model_filename)
     return model
 
