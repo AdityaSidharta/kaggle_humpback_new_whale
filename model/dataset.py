@@ -68,7 +68,7 @@ class TestDataset(Dataset):
         return len(self.image_label)
 
     def __getitem__(self, idx):
-        img_path = os.path.join(self.train_path, self.image_label[idx])
+        img_path = os.path.join(self.test_path, self.image_label[idx])
         img_array = io.imread(img_path)
         if len(img_array.shape) == 2:
             img_array = gray2rgb(img_array)
