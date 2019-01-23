@@ -1,5 +1,7 @@
 import math
 import torch
+import numpy as np
+import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -33,5 +35,21 @@ def img2tensor(img_array, device):
     img_array = img_array.transpose((2, 0, 1))
     return torch.from_numpy(img_array).float().to(device)
 
-def create_dev_val(input_list):
-    None
+
+def inverse_label(array, ohe_model):
+    value = ohe_model.categories_[0][array].tolist()
+    return ' '.join(value)
+
+
+def create_kaggle_submission(test_image_label, result_list, ohe_model):
+    row = []
+    assert len(test_image_label) == len(result_list)
+    for idx in range(len(test_image_label)):
+        image = test_image_label[idx]
+        id = inverse_label(np.array(result_list[idx]), ohe_model)
+        row.append({
+            'Image': image,
+            'Id': id
+        })
+    return pd.DataFrame(row)[['Image', 'Id']]
+

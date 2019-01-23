@@ -28,5 +28,5 @@ def metric_fn(model, data):
 def pred_fn(model, data):
     img = data
     prediction = torch.sigmoid(model(img))
-    prediction_indices = torch.topk(prediction, 5)[1].cpu().numpy().tolist()
+    prediction_indices = torch.topk(prediction, 5)[1].cpu().numpy()
     return prediction_indices
