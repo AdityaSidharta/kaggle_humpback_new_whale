@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import torch
 from tqdm import tqdm_notebook as tqdm
@@ -6,6 +7,7 @@ from tqdm import tqdm_notebook as tqdm
 from model.validation import validate_model
 from utils.checkpoint import save_checkpoint, save_metadata
 from utils.common import get_batch_info
+from utils.envs import model_cp_path
 
 
 def train_step(optimizer, loss):
@@ -22,12 +24,16 @@ def fit_model(
     criterion,
     loss_fn,
     metric_fn,
+    scheduler,
     val_dataloader=None,
     checkpoint=False,
     model_filename="checkpoint",
+    **kwargs
 ):
     cur_time = datetime.datetime.now().strftime('%Y%m%d-%H%M')
-    save_metadata(cur_time, model, n_epoch, dev_dataloader, optimizer, criterion, val_dataloader)
+    if not os.path.exists(os.path.join(model_cp_path, cur_time)):
+        os.mkdir(os.path.join(model_cp_path, cur_time))
+    save_metadata(cur_time, model, n_epoch, dev_dataloader, optimizer, criterion, val_dataloader, scheduler)
     n_dev_obs, dev_batch_size, dev_batch_per_epoch = get_batch_info(dev_dataloader)
     for idx_epoch in tqdm(range(n_epoch), total=n_epoch):
         t = tqdm(enumerate(dev_dataloader), total=dev_batch_per_epoch)
@@ -44,6 +50,7 @@ def fit_model(
                 model, criterion, loss_fn, metric_fn, val_dataloader
             )
             print(" val_loss : {}, val_metric : {}".format(val_loss, val_metric))
+            scheduler.step(val_loss)
         if checkpoint:
             filename = "{}_{}".format(model_filename, idx_epoch)
             save_checkpoint(model, optimizer, cur_time, filename)

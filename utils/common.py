@@ -5,17 +5,23 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 import oyaml as yaml
 
+
 def write_yaml(yaml_file, path):
     with open(path, 'w') as outfile:
         yaml.dump(yaml_file, stream=outfile, default_flow_style=False)
+
+
+def get_categories(df):
+    return [np.unique(df.Id.values).tolist()]
+
 
 def remove_new_whale(df):
     return df[df.Id != 'new_whale'].copy()
 
 
-def create_label(df):
+def create_label(df, categories):
     label = df.Id.values.reshape(-1, 1)
-    ohe_model = OneHotEncoder().fit(label)
+    ohe_model = OneHotEncoder(categories=categories).fit(label)
     ohe_label = ohe_model.transform(label)
     image_label = df.Image.values
     return ohe_model, image_label.tolist(), ohe_label.toarray()
