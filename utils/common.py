@@ -3,7 +3,11 @@ import torch
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+import oyaml as yaml
 
+def write_yaml(yaml_file, path):
+    with open(path, 'w') as outfile:
+        yaml.dump(yaml_file, stream=outfile, default_flow_style=False)
 
 def remove_new_whale(df):
     return df[df.Id != 'new_whale'].copy()

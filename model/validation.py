@@ -1,6 +1,6 @@
 import numpy as np
-from tqdm import tqdm_notebook as tqdm
 import torch
+from tqdm import tqdm_notebook as tqdm
 
 from utils.common import get_batch_info
 

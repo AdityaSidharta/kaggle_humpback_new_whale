@@ -1,7 +1,10 @@
-from tqdm import tqdm_notebook as tqdm
+import datetime
+
 import torch
+from tqdm import tqdm_notebook as tqdm
+
 from model.validation import validate_model
-from utils.checkpoint import save_checkpoint
+from utils.checkpoint import save_checkpoint, save_metadata
 from utils.common import get_batch_info
 
 
@@ -21,8 +24,10 @@ def fit_model(
     metric_fn,
     val_dataloader=None,
     checkpoint=False,
-    model_filename="pytorch",
+    model_filename="checkpoint",
 ):
+    cur_time = datetime.datetime.now().strftime('%Y%m%d-%H%M')
+    save_metadata(cur_time, model, n_epoch, dev_dataloader, optimizer, criterion, val_dataloader)
     n_dev_obs, dev_batch_size, dev_batch_per_epoch = get_batch_info(dev_dataloader)
     for idx_epoch in tqdm(range(n_epoch), total=n_epoch):
         t = tqdm(enumerate(dev_dataloader), total=dev_batch_per_epoch)
@@ -40,8 +45,8 @@ def fit_model(
             )
             print(" val_loss : {}, val_metric : {}".format(val_loss, val_metric))
         if checkpoint:
-            model_filename = "{}_{}".format(model_filename, idx_epoch)
-            save_checkpoint(model, optimizer, model_filename)
+            filename = "{}_{}".format(model_filename, idx_epoch)
+            save_checkpoint(model, optimizer, cur_time, filename)
     return model
 
 

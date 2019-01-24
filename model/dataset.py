@@ -1,10 +1,11 @@
+import os
+
 import torch
-from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Resize, RandomHorizontalFlip,\
-    RandomVerticalFlip, RandomAffine, Normalize, ToTensor, ToPILImage, Grayscale
 from skimage import io
 from skimage.color import gray2rgb
-import os
+from torch.utils.data import Dataset
+from torchvision.transforms import Compose, Resize, RandomHorizontalFlip, \
+    RandomVerticalFlip, RandomAffine, Normalize, ToTensor, ToPILImage, Grayscale
 
 train_transform = Compose([
     ToPILImage(),

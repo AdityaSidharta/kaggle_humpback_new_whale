@@ -17,6 +17,7 @@ ipykernel = "*"
 scikit-learn = "*"
 scikit-image = "*"
 torchsummary = "*"
+oyaml = "*"
 
 [requires]
 python_version = "3.6.7"
