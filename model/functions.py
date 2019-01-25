@@ -27,6 +27,14 @@ def metric_fn(model, data, **kwargs):
     return np.array([np.mean(mapk_array)])
 
 
+def pred_proba_fn(model, data):
+    img, target = data
+    prediction = torch.sigmoid(model(img))
+    target = torch.topk(target, 1)[1].cpu().numpy()
+    value = prediction.cpu().numpy()
+    return target, value
+
+
 def pred_fn(model, data, **kwargs):
     img = data
     prediction = torch.sigmoid(model(img))

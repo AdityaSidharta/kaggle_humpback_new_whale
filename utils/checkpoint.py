@@ -17,7 +17,7 @@ def save_checkpoint(model, optimizer, foldername, filename=None):
     torch.save(optimizer.state_dict(), optim_filepath)
 
 
-def save_metadata(filename, model, n_epoch, dev_dataloader, optimizer, criterion, val_dataloader, scheduler):
+def save_metadata(filename, model, n_epoch, dev_dataloader, optimizer, criterion, val_dataloader, scheduler=None):
     file_path = os.path.join(result_metadata_path, '{}.yaml'.format(filename))
     n_dev, bs_dev, _ = get_batch_info(dev_dataloader)
 
@@ -37,10 +37,11 @@ def save_metadata(filename, model, n_epoch, dev_dataloader, optimizer, criterion
     metadata['criterion'] = {
         'name': criterion.__class__.__name__
     }
-    metadata['scheduler'] = {
-        'name': scheduler.__class__.__name__,
-        'params': scheduler.state_dict()
-    }
+    if scheduler:
+        metadata['scheduler'] = {
+            'name': scheduler.__class__.__name__,
+            'params': scheduler.state_dict()
+        }
     if val_dataloader:
         n_val, bs_val, _ = get_batch_info(val_dataloader)
         metadata['val_dataset'] = {
